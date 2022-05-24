@@ -11,9 +11,13 @@ function App() {
   const [input, setInput] = useState("");
 
   useEffect(() => {
-    db.collection("todos").onSnapshot((snapshot) => {
-      setTodos(snapshot.docs.map((doc) => doc.data().todo));
-    });
+    db.collection("todos")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setTodos(
+          snapshot.docs.map((doc) => ({ id: doc.id, todo: doc.data().todo }))
+        );
+      });
   }, []);
 
   const addTodo = (event) => {
@@ -30,7 +34,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Hello Wiliam Kieu!!!</h1>
+      <h1>Hello Friends!!!</h1>
       <form>
         <FormControl>
           <InputLabel htmlFor="my-input">Write a Todo</InputLabel>
@@ -53,7 +57,7 @@ function App() {
 
       <ul>
         {todos.map((todo) => (
-          <Todo todo={todo} />
+          <Todo todo={todo} key={todo.id} />
         ))}
       </ul>
     </div>
